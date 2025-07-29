@@ -1,1 +1,27 @@
-README.md
+future plans.txt
+Readme.md
+
+# Python
+*.pyc
+__pycache__/
+
+# Flask/Instance-specific
+instance/
+*.db
+
+# Virtual Environments
+.venv/
+venv/
+
+# IDEs
+.idea/
+.vscode/
+
+# Logs and system
+*.log
+.DS_Store
+
+# Temp / Dev-only files
+temp.py
+temp.html
+ utils.py
