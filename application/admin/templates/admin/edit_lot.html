@@ -1,0 +1,77 @@
+{% extends "admin_base.html" %}
+{% block title %}Edit Parking Lot{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h3 class="mb-4">Edit Parking Lot</h3>
+  <form method="POST">
+    {{ form.hidden_tag() }}
+
+        <!-- Lot Name -->
+        <div class="mb-3">
+          {{ form.name.label(class="form-label") }}
+          {{ form.name(class="form-control", autofocus=True) }}
+          {% if form.name.errors %}
+            <div class="text-danger small">
+              {{ form.name.errors[0] }}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Cost Per Hour -->
+        <div class="mb-3">
+          {{ form.cost_per_hour.label(class="form-label") }}
+          <div class="input-group">
+            <span class="input-group-text">₹</span>
+            {{ form.cost_per_hour(class="form-control") }}
+          </div>
+          {% if form.cost_per_hour.errors %}
+            <div class="text-danger small">
+              {{ form.cost_per_hour.errors[0] }}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Address -->
+        <div class="mb-3">
+          {{ form.address.label(class="form-label") }}
+          {{ form.address(class="form-control") }}
+          {% if form.address.errors %}
+            <div class="text-danger small">
+              {{ form.address.errors[0] }}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Pincode -->
+        <div class="mb-3">
+          {{ form.pincode.label(class="form-label") }}
+          {{ form.pincode(class="form-control") }}
+          {% if form.pincode.errors %}
+            <div class="text-danger small">
+              {{ form.pincode.errors[0] }}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Max Spots -->
+        <div class="mb-3">
+          {{ form.max_spots.label(class="form-label") }}
+          {{ form.max_spots(class="form-control") }}
+          {% if form.max_spots.errors %}
+            <div class="text-danger small">
+              {{ form.max_spots.errors[0] }}
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Submit -->
+        <button type="button" class="btn btn-lg anchor px-4" style="background-color:#9f6737 !important;"
+                        onclick="window.history.back();">Cancel</button>
+          {{ form.submit(class="btn btn-primary btn-lg anchor px-3") }}
+      </form>
+    </div>
+  </div>
+</div>
+    <footer><br></footer>
+{% endblock %}

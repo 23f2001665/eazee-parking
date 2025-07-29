@@ -1,0 +1,85 @@
+{% extends "admin_base.html" %}
+{% block title %}Reservation Details{% endblock %}
+
+{% block content %}
+<style>
+  @media print {
+    nav, .navbar, .sidebar, footer, .btn, .no-print {
+      display: none !important;
+    }
+    body {
+      background: white !important;
+    }
+  }
+</style>
+
+<div class="container my-5">
+  <div class="border rounded p-4 p-lg-5 mx-auto" style="border: 2px solid #a1887f !important; background-color: #fff7ec; max-width: 960px;">
+
+    <!-- Header -->
+    <div class="text-center mb-5">
+      <h2 class="fw-bold" style="color: #9f391b;">PARKING RECEIPT</h2>
+      <p style="color: #569a7e; font-size: 1.3rem; font-weight: bold; font-family:'Code Pro'">Reservation #{{ '%04d'|format(reservation.id) }}</p>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="row g-4 g-lg-5">
+      <!-- User Details -->
+      <div class="col-lg-6">
+        <h4 class="fw-bold mb-3" style="color: #bf360c;">🧍 User Details</h4>
+        <p class="mb-2 d-flex justify-content-between"><strong>Name:</strong> <span>{{ reservation.user.name }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Email:</strong> <span>{{ reservation.user.email }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Phone:</strong> <span>{{ reservation.user.phone }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Vehicle:</strong> <span>{{ reservation.vehicle_number }}</span></p>
+      </div>
+
+      <!-- Lot Details -->
+      <div class="col-lg-6">
+        <h4 class="fw-bold mb-3" style="color: #bf360c;">🅿️ Lot Details</h4>
+        <p class="mb-2 d-flex justify-content-between"><strong>Lot Name:</strong> <span>{{ reservation.lot.name }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Pincode:</strong> <span>{{ reservation.lot.pincode }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Address:</strong> <span>{{ reservation.lot.address }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Spot No:</strong> <span>#{{ reservation.spot_number }}</span></p>
+      </div>
+    </div>
+
+    <hr class="my-4" style="border-top: 1px solid #a1887f;">
+
+    <!-- Reservation + Price -->
+    <div class="row g-4 g-lg-5">
+      <!-- Reservation Info -->
+      <div class="col-lg-6">
+        <h4 class="fw-bold mb-3" style="color: #bf360c;">🕒 Reservation Info</h4>
+        <p class="mb-2 d-flex justify-content-between"><strong>Check-in:</strong> <span>{{ reservation.start_time.strftime('%d %b %Y, %I:%M %p') }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Check-out:</strong>
+          <span>
+            {% if reservation.end_time  %}
+              {{ reservation.end_time .strftime('%d %b %Y, %I:%M %p') }}
+            {% else %}
+              <span class="badge bg-success">ACTIVE</span>
+            {% endif %}
+          </span>
+        </p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Reservation ID:</strong> <span>{{ reservation.id }}</span></p>
+      </div>
+
+      <!-- Price & Status -->
+      <div class="col-lg-6">
+        <h4 class="fw-bold mb-3" style="color: #bf360c;">💸 Price & Status</h4>
+        <p class="mb-2 d-flex justify-content-between"><strong>Rate/hr:</strong> <span>₹{{ reservation.cost_per_hr }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Total:</strong> <span class="fw-bolder fs-5">₹{{ reservation.total_cost }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Status:</strong>
+          <span>
+            {% if reservation.end_time  %}
+              <span class="badge bg-primary">✅ Completed</span>
+            {% else %}
+              <span class="badge bg-warning text-dark">🅿️ In Progress</span>
+            {% endif %}
+          </span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

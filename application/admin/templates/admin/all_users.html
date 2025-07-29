@@ -1,0 +1,106 @@
+{% extends "admin_base.html" %}
+{% block title %}All Users{% endblock %}
+{% block content %}
+<div class="border rounded p-3 mt-4" style="border: 2px solid #a1887f !important; background-color: #fff7ec;">
+  <h3 style="color: #9f391b; font-weight: bolder">All Users</h3>
+
+  {% set toggle_order = 'desc' if order == 'asc' else 'asc' %}
+
+  <!-- Header Row -->
+  <div class="list-group-item d-none d-lg-flex fw-bold border fs-5 py-2" style="border-bottom: 3px solid #a1887f !important; background-color: #9f6737;">
+    <!-- 1. ID (15%) -->
+    <div class="text-center" style="width: 15%;">
+      <a href="{{ url_for('admin.all_users', sort='id', order=toggle_order if sort == 'id' else 'asc') }}" class="text-decoration-underline text-white">
+        ID {% if sort == 'id' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+      </a>
+    </div>
+    <!-- 2. Username (25%) -->
+    <div style="width: 25%;">
+      <a href="{{ url_for('admin.all_users', sort='username', order=toggle_order if sort == 'username' else 'asc') }}" class="text-decoration-underline text-white" style="margin-left: 10px;">
+        Username {% if sort == 'username' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+      </a>
+    </div>
+    <!-- 3. Email (30%) -->
+    <div style="width: 30%;">
+      <a href="{{ url_for('admin.all_users', sort='email', order=toggle_order if sort == 'email' else 'asc') }}" class="text-decoration-underline text-white">
+        Email {% if sort == 'email' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+      </a>
+    </div>
+    <!-- 4. Total Parking (20%) -->
+    <div class="text-center" style="width: 20%;">
+      <a href="{{ url_for('admin.all_users', sort='total_parking', order=toggle_order if sort == 'total_parking' else 'asc') }}" class="text-decoration-underline text-white">
+        Total Parking {% if sort == 'total_parking' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+      </a>
+    </div>
+    <!-- 5. Action (10%) -->
+    <div class="text-center" style="width: 10%; color:white;">
+      Action
+    </div>
+  </div>
+
+  <!-- Users List -->
+  {% for user in users %}
+  <!-- Each user is a list item with conditional background color -->
+  <div class="list-group-item border-bottom p-3" style="background-color: {% if user.is_active %}#f6e6ce{% else %}#d3d3d3{% endif %};">
+    <!-- Mobile View: Card Layout -->
+    <div class="d-lg-none">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h5 class="mb-1"><strong>{{ user.username }}</strong>
+            {% if not user.is_active %}
+              <span class="badge bg-secondary ms-2">Inactive</span>
+            {% endif %}
+          </h5>
+          <p class="mb-2 text-muted"><small>{{ user.email }}</small></p>
+        </div>
+        <div class="text-end ps-2">
+          <a href="{{ url_for('admin.user_profile', user_id=user.id) }}" class="btn btn-sm text-white" style="background-color: #569a7e;">
+            View
+          </a>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between small mt-2">
+        <div><strong>ID:</strong> {{ user.id }}</div>
+        <div><strong>Total Parking:</strong> {{ user.total_parking }}</div>
+      </div>
+    </div>
+
+    <!-- Desktop View: Table Row Layout -->
+    <div class="d-none d-lg-flex align-items-center">
+      <!-- 1. ID -->
+      <div class="text-center" style="width: 15%;">
+        <strong>{{ user.id }}</strong>
+      </div>
+      <!-- 2. Username -->
+      <div style="width: 25%;">
+        <strong>{{ user.username }}</strong>
+        {% if not user.is_active %}
+          <span class="badge bg-secondary ms-2">Inactive</span>
+        {% endif %}
+        <br>
+        <small class="text-muted">&nbsp;&nbsp;&nbsp;&nbsp;{{ user.name or 'No name provided' }}</small>
+      </div>
+      <!-- 3. Email -->
+      <div style="width: 30%;">
+        <strong>{{ user.email }}</strong>
+      </div>
+      <!-- 4. Total Parking -->
+      <div class="text-center" style="width: 20%;">
+        <strong>{{ user.total_parking }}</strong>
+      </div>
+      <!-- 5. Action -->
+      <div class="text-center" style="width: 10%;">
+        <a href="{{ url_for('admin.user_profile', user_id=user.id) }}" class="btn btn-sm text-white" style="background-color: #569a7e;">
+          View
+        </a>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="list-group-item text-center p-4" style="background-color: #f6e6ce;">
+    No users found.
+  </div>
+  {% endfor %}
+</div>
+<footer><br></footer>
+{% endblock %}

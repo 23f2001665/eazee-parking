@@ -1,0 +1,140 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="my-4 text-left">
+    <h2 class="fw-bold">Welcome, {{ current_user.name }}!</h2>
+    <p class="lead text-muted">Manage your parking system with ease.</p>
+  </div>
+
+  <!-- Available Lots Section -->
+  <div class="border rounded p-3 mt-4" style="border: 2px solid #a1887f !important; background-color: #fff7ec;">
+    <h3 style="color: #9f391b; font-weight: bolder">Parking Lots Overview</h3>
+    <!-- Lots List -->
+    {% if not lots %}
+        <p class="lead text-muted">No lots available.</p>
+    {% else %}
+      {% for lot in lots %}
+      <div class="list-group-item border-bottom p-3" style="background-color: {% if lot.is_active %}#f6e6ce{% else %}#d3d3d3{% endif %};">
+        <!-- Mobile View: Card Layout -->
+        <div class="d-lg-none">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h5 class="mb-1"><strong>{{ lot.name }}</strong>
+                {% if not lot.is_active %}
+                  <span class="badge bg-secondary ms-2">Inactive</span>
+                {% endif %}
+              </h5>
+              <p class="mb-2 text-muted"><small>{{ lot.address }}</small></p>
+              <p class="mb-1"><strong>Available:</strong> {{ lot.available_spots }}/{{ lot.max_spots }} spots</p>
+              <p class="mb-0"><strong>Revenue:</strong> ₹ {{ "%.2f"|format(lot.total_revenue) }}</p>
+            </div>
+            <div class="text-end ps-2">
+              <a href="{{ url_for('admin.view_lot_details', lot_id=lot.id) }}" class="btn btn-sm text-white" style="background-color: #c1845d;">
+                View
+              </a>
+            </div>
+          </div>
+        </div>
+        <!-- Desktop View: Table Row Layout -->
+        <div class="d-none d-lg-flex align-items-center">
+          <div style="width: 60%;">
+            <strong>{{ lot.name[:30] }}</strong>
+            {% if not lot.is_active %}
+              <span class="badge bg-secondary ms-2">Inactive</span>
+            {% endif %}
+            <br>
+            <small class="text-muted">&nbsp;&nbsp;&nbsp;&nbsp;{{ lot.address[:35] }}</small>
+          </div>
+          <div class="text-center" style="width: 15%;">
+            {{ lot.available_spots }}/{{ lot.max_spots }} spots
+          </div>
+          <div class="text-center" style="width: 15%;">
+            ₹ {{ "%.2f"|format(lot.total_revenue) }}
+          </div>
+          <div class="text-center" style="width: 10%;">
+            <a href="{{ url_for('admin.view_lot_details', lot_id=lot.id) }}" class="btn btn-outline-dark btn-sm" style="background-color: #c1845d;">
+              View
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="text-center mt-3">
+      <a href="{{ url_for('admin.all_lots') }}" class="btn btn-lg text-white" style="background-color: #c1845d;">Show All Lots</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="{{ url_for('admin.add_lot') }}" class="btn btn-lg text-white" style="background-color: #c1845d;">Add New Lot</a>
+    </div>
+  </div>
+
+  <!-- Users Section -->
+  <div class="border rounded p-3 mt-4" style="border: 2px solid #a1887f !important; background-color: #fff7ec;">
+    <h3 style="color: #9f391b; font-weight: bolder">Recent Users</h3>
+    <!-- Users List -->
+    {% if users %}
+      {% for user in users %}
+      <div class="list-group-item border-bottom p-3" style="background-color: {% if user.is_active %}#f6e6ce{% else %}#d3d3d3{% endif %};">
+        <!-- Mobile View: Card Layout -->
+        <div class="d-lg-none">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <div>
+              <h5 class="mb-1 fw-bold">{{ user.username }}
+                {% if not user.is_active %}
+                  <span class="badge bg-secondary ms-2">Inactive</span>
+                {% endif %}
+              </h5>
+              <p class="mb-2"><small>{{ user.email }}</small></p>
+            </div>
+            <div class="text-end ps-2" style="flex-shrink: 0;">
+              <a href="{{ url_for('admin.user_profile', user_id=user.id) }}" class="btn btn-sm text-white" style="background-color: #569a7e;">
+                View Profile
+              </a>
+            </div>
+          </div>
+          <hr class="my-2">
+          <div class="small">
+            <p class="mb-1"><strong>Name:</strong> {{ user.name or 'Not provided' }}</p>
+            <p class="mb-1"><strong>Active Bookings:</strong> {{ user.active_parking }}</p>
+            <p class="mb-0"><strong>Total Bookings:</strong> <span class="fw-bold">{{ user.total_parking }}</span></p>
+          </div>
+        </div>
+        <!-- Desktop View: Table Row Layout -->
+        <div class="d-none d-lg-flex align-items-center">
+          <div style="width: 30%;">
+            <strong>{{ user.username[:30] }}</strong>
+            {% if not user.is_active %}
+              <span class="badge bg-secondary ms-2">Inactive</span>
+            {% endif %}
+            <br>
+            <small>&nbsp;&nbsp;&nbsp;&nbsp;{{ user.name or 'Not provided' }}</small>
+          </div>
+          <div class="small text-center" style="width: 35%;">
+            Email: <strong>{{ user.email[:35] }}{{ '...' if user.email|length > 35 else '' }}</strong>
+          </div>
+          <div class="text-center" style="width: 22%;">
+            Active: {{ user.active_parking }}<br>
+            <small>Total: {{ user.total_parking }}</small>
+          </div>
+          <div class="text-center" style="width: 13%;">
+            <a href="{{ url_for('admin.user_profile', user_id=user.id) }}" class="btn btn-sm text-white" style="background-color: #569a7e;">
+              View Profile
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="list-group-item text-center p-4" style="background-color: #f6e6ce;">
+        No users found in the system.
+      </div>
+    {% endif %}
+    <!-- Footer Button -->
+    <div class="text-center mt-3">
+      <a href="{{ url_for('admin.all_users') }}" class="btn btn-lg text-white" style="background-color: #c1845d;">Show All Users</a>
+    </div>
+  </div>
+</div>
+<footer><br></footer>
+{% endblock %}

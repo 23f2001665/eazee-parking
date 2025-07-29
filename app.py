@@ -1,37 +1,51 @@
-from flask import Flask
-from application import models, init_db
-from application.database import db
-from pathlib import Path
+# app.py
 
-def create_app():
-    app = Flask(__name__)
-    db_file = Path(app.instance_path) / "parking.sqlite3"
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_file}"
-    db.init_app(app)
+from application import create_app
+from application.extensions import db
+from application.database.init_db import create_admin
+from flask.cli import with_appcontext
+import click
+
+app = create_app()
+
+@app.shell_context_processor
+def _shell_context():
+    from application.database import User, ParkingLot, ParkingSpot, Reservation
+    return dict(db=db, User=User, ParkingLot=ParkingLot, ParkingSpot=ParkingSpot, Reservation=Reservation)
+
+
+# Example custom CLI: flask seed
+@click.command("seed")
+@with_appcontext
+def seed():
+    create_admin(app)
+
+
+@click.command("clear-data")
+@with_appcontext
+def clear_data():
     
-    db_file.parent.mkdir(parents=True, exist_ok=True)  #  ensure instance/ exists
+    # Get all tables in correct deletion order (child → parent)
+    meta = db.metadata
+    for table in reversed(meta.sorted_tables):
+        print(f"🗑️ Deleting from {table.name}...")
+        db.session.execute(table.delete())
 
-    with app.app_context():
-        try:
-            if not db_file.exists():
-                print("doesn't exist")
-                
-                init_db.create_admin(app)
-            else:
-                admin = models.User.query.filter_by(role='admin').first()
-                if not admin:
-                    db.drop_all()
-                    print("db dropped")
-                    init_db.create_admin(app)
-        except Exception as exc:
-            print("Some error occured in databse creation in app.py line 13", exc)
+    db.session.commit()
+    click.echo("all tables cleared successfully")
 
-    return app
+
+@click.command("drop-all")
+@with_appcontext
+def drop_all():
+    db.drop_all()
+    click.echo("deleted all the schemas")
+
+
+app.cli.add_command(clear_data)
+app.cli.add_command(seed)
+app.cli.add_command(drop_all)
 
 if __name__ == "__main__":
-    # total wipeout command, just for testing purposes.
-    from utils import remove
-    remove.remove(auto=True)
-
-    app = create_app()
     app.run(debug=True)
+    # don't call seed from here it is meant to be called from flash shell only.

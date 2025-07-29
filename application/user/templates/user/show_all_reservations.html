@@ -1,0 +1,116 @@
+{% extends "user_base.html" %}
+{% block title %}Your Reservations{% endblock %}
+
+{% block content %}
+<div class="border rounded p-3 mt-4" style="border: 2px solid #a1887f !important; background-color: #fff7ec;">
+  <h3 style="color: #9f391b; font-weight: bolder">Your Reservations</h3>
+
+  {% set toggle_order = 'desc' if order == 'asc' else 'asc' %}
+
+  <!-- Header Row - Visible on Desktops (lg) and up -->
+  <div class="list-group-item d-none d-lg-flex fw-bold border fs-5 py-2" style="border-bottom: 3px solid #a1887f !important; background-color: #9f6737; color: white;">
+    <!-- 1. Lot Details (40%) -->
+    <div style="width: 40%; margin-left: 10px;">
+      <a href="{{ url_for('user.all_reservations', sort='lot_name', order=toggle_order if sort == 'lot_name' else 'asc') }}" class="text-white text-decoration-underline">
+        Lot Name & Address {% if sort == 'lot_name' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+      </a>
+    </div>
+    <!-- 2. Vehicle (15%) -->
+    <div class="text-center" style="width: 15%;">Vehicle</div>
+    <!-- 3. Start Time (18%) -->
+    <div class="text-center" style="width: 18%;">
+       <a href="{{ url_for('user.all_reservations', sort='start_time ', order=toggle_order if sort == 'start_time ' else 'asc') }}" class="text-white text-decoration-underline">
+        Start Time {% if sort == 'start_time ' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+      </a>
+    </div>
+    <!-- 4. Payment Info (15%) -->
+    <div class="text-center" style="width: 18%;">
+       <a href="{{ url_for('user.all_reservations', sort='end_time', order=toggle_order if sort == 'end_time' else 'asc') }}" class="text-white text-decoration-underline">
+        Payment Time {% if sort == 'end_time' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+      </a>
+    </div>
+    <!-- 5. Action (12%) -->
+    <div class="text-center" style="width: 12%;">Action</div>
+  </div>
+
+  <!-- Reservations List -->
+  {% if reservations %}
+    {% for r in reservations %}
+    <div class="list-group-item border-bottom p-3 {% if r.end_time %}text-muted{% endif %}"
+         style="background-color: {% if not r.end_time %}#f6e6ce{% else %}#9f9f9f{% endif %};">
+
+      <!-- Mobile View: Card Layout -->
+      <div class="d-lg-none">
+        <div class="d-flex justify-content-between align-items-start mb-2">
+          <div>
+            <h5 class="mb-1 {% if not r.end_time %}fw-bold{% endif %}">{{ r.lot.name }}</h5>
+            <p class="mb-2"><small>{{ r.lot.address }}</small></p>
+          </div>
+          <div class="text-end ps-2" style="flex-shrink: 0;">
+            {% if not r.end_time %}
+              <form method="POST" action="{{ url_for('user.free_reservation', reservation_id=r.id) }}">
+                <button class="btn btn-success btn-sm">Free & Pay</button>
+              </form>
+            {% else %}
+              <a href="{{ url_for('user.details_reservation', reservation_id=r.id) }}" class="btn btn-sm text-white" style="background-color: #569a7e;">View Details</a>
+            {% endif %}
+          </div>
+        </div>
+        <hr class="my-2">
+        <div class="small">
+          <p class="mb-1"><strong>Vehicle:</strong> {{ r.vehicle_number }}</p>
+          <p class="mb-1"><strong>Started:</strong> {{ r.start_time .strftime('%d %b, %I:%M %p') }}</p>
+          {% if not r.end_time %}
+            <p class="mb-0"><strong>Amount:</strong> <span class="fw-bold">₹ {{ r.total_cost }}</span></p>
+          {% else %}
+            <p class="mb-0"><strong>Paid:</strong> ₹ {{ r.total_cost }} on {{ r.end_time .strftime('%d %b, %H:%M') }}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Desktop View: Table Row Layout -->
+      <div class="d-none d-lg-flex align-items-center">
+        <!-- 1. Lot Details -->
+        <div style="width: 40%;">
+          <strong>{{ r.lot.name[:30] }}</strong><br>
+          <small>&nbsp;&nbsp;&nbsp;&nbsp;{{ r.lot.address[:35] }}</small>
+        </div>
+        <!-- 2. Vehicle -->
+        <div class="small text-center" style="width: 15%;">
+          Vehicle: <strong>{{ r.vehicle_number }}</strong>
+        </div>
+        <!-- 3. Start Time -->
+        <div class="text-center" style="width: 18%;">
+            <small>{{ r.start_time .strftime('%d %b, %Y') }}</small><br>
+            {{ r.start_time .strftime('%I:%M %p') }}
+        </div>
+        <!-- 4. Payment Info -->
+        <div class="text-center" style="width: 15%;">
+          {% if not r.end_time %}
+            ₹ {{ r.total_cost }}
+          {% else %}
+            ₹ {{ r.total_cost }}<br>
+            <small>{{ r.end_time .strftime('%d %b, %H:%M') }}</small>
+          {% endif %}
+        </div>
+        <!-- 5. Action -->
+        <div class="text-center" style="width: 12%;">
+          {% if not r.end_time %}
+            <form method="GET" action="{{ url_for('user.free_reservation', reservation_id=r.id) }}">
+              <button class="btn btn-outline-success btn-sm">Free and Pay</button>
+            </form>
+          {% else %}
+            <a href="{{ url_for('user.details_reservation', reservation_id=r.id) }}" class="btn btn-sm text-white" style="background-color: #569a7e;">View Details</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="list-group-item text-center p-4" style="background-color: #f6e6ce;">
+      You have no active or past reservations.
+    </div>
+  {% endif %}
+</div>
+<footer><br></footer>
+{% endblock %}

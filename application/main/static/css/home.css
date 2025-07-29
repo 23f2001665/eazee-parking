@@ -1,0 +1,106 @@
+/* Full screen background image */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: sans-serif;
+    overflow: hidden;
+}
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    /*background-image: url("../images/light_brown.png");*/
+    background-color: #f3dfc6;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 1;
+    animation: fadeInBackground 1.5s forwards;
+    z-index: -1; /* ensures content sits on top */
+}
+@media (max-width: 768px) {
+    .background {
+        background-position: top center;
+    }
+}
+
+.content-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    /* Glassmorphism style */
+    background: rgba(100, 100, 80, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+
+    padding: 2.5rem 3.5rem;
+    border-radius: 16px;
+    text-align: center;
+    opacity: 0;
+    animation: fadeInBox 0.8s ease-in-out 0.8s forwards;
+    color: #f8f9fa;
+}
+
+
+.content-box h1 {
+    margin-bottom: 1.5rem;
+    font-size: 3.0rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #000000;
+    text-shadow: 2px 2px 4px rgb(147, 130, 130);
+}
+
+.tagline {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+    font-style: oblique;
+    letter-spacing: 1px;
+    color: #000000;
+}
+
+.content-box .links a {
+    display: inline-block;
+    margin: 0 12px;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #0080ff, #ff8000);
+    color: #dceccc;
+    font-weight: 600;
+    transition: transform 0.4s ease, background 0.3s;
+    box-shadow: 0 4px 14px rgba(64, 128, 128, 0.4);
+}
+
+.content-box .links a:hover {
+    transform: scale(1.20);
+    background: linear-gradient(135deg, #ff8000, #0080ff);
+    color: #000000;
+    transition: transform 1.5s ease, background 1.3s;
+    box-shadow: 5px 5px 5px 5px rgba(255, 255, 255, 0.1);
+}
+
+/* Animations */
+@keyframes fadeInBackground {
+    to {
+        opacity: 0.9;
+    }
+}
+
+@keyframes fadeInBox {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -45%);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+

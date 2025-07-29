@@ -1,0 +1,168 @@
+{% extends "admin_base.html" %}
+{% block title %}View Lot - {{ lot.name }}{% endblock %}
+{% block content %}
+
+<!-- Lot Details Card -->
+    <div class="card shadow-sm mb-4" style="border: 2px solid #a1887f;">
+        <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #9f391b; color: white;">
+            <h4 class="mb-0">Lot Details</h4>
+            <div>
+                <a href="{{ url_for('admin.edit_lot', lot_id=lot.id) }}" class="btn btn-sm me-2" style="background-color: #c1845d; color: white; border: 1px solid #a1887f;">
+                    <i class="bi bi-pencil-square"></i> Edit
+                </a>
+                {% if lot.is_active %}
+                <form action="{{ url_for('admin.deactivate_lot', lot_id=lot.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to deactivate this lot?');">
+                    <button type="submit" class="btn btn-sm" style="background-color: #9f391b; color: white; border: 1px solid #a1887f;">
+                        <i class="bi bi-trash"></i> Deactivate
+                    </button>
+                </form>
+                {% else %}
+                <form action="{{ url_for('admin.deactivate_lot', lot_id=lot.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to activate this lot again?');">
+                    <button type="submit" class="btn btn-sm" style="background-color: #9f391b; color: white; border: 1px solid #a1887f;">
+                        <i class="bi bi-trash"></i> Activate
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card-body" style="background-color: #fff7ec;">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong style="color: #9f391b;">ID:</strong> {{ lot.id }}</p>
+                    <p><strong style="color: #9f391b;">Name:</strong> {{ lot.name }}</p>
+                    <p><strong style="color: #9f391b;">Location:</strong> {{ lot.address }}</p>
+                    <p><strong style="color: #9f391b;">Pincode:</strong> {{ lot.pincode }}</p>
+                    <p><strong style="color: #9f391b;">Cost per Hour:</strong> ₹ {{ lot.cost_per_hour }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong style="color: #9f391b;">Total Spots:</strong> {{ lot.max_spots }}</p>
+                    <p><strong style="color: #9f391b;">Available Spots:</strong> {{ lot.available_spots }}</p>
+                    <p><strong style="color: #9f391b;">Total Revenue:</strong> ₹ {{ "%.2f"|format(lot.total_revenue) }}</p>
+                    <p><strong style="color: #9f391b;">Created At:</strong> {{ lot.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                    <p><strong style="color: #9f391b;">Last Modified:</strong> {{ lot.updated_at.strftime('%Y-%m-%d %H:%M:%S') if lot.updated_at else "NA"}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- Parking Spots Section -->
+<div class="border rounded p-3 mt-4" style="border: 2px solid #a1887f !important; background-color: #fff7ec;">
+  <h3 style="color: #9f391b; font-weight: bolder">Parking Spots Overview</h3>
+
+  {% set toggle_order = 'desc' if order == 'asc' else 'asc' %}
+
+  <!-- Header Row -->
+  <div class="list-group-item d-none d-lg-flex fw-bold border fs-5 py-2" style="border-bottom: 3px solid #a1887f !important; background-color: #9f6737;">
+    <!-- 1. ID (15%) -->
+    <div class="text-center" style="width: 15%;">
+      <a href="{{ url_for('admin.view_lot_details', lot_id=lot.id, sort='id', order=toggle_order if sort == 'id' else 'asc') }}" class="text-decoration-underline text-white">
+        ID {% if sort == 'id' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+      </a>
+    </div>
+    <!-- 2. Spot Number (20%) -->
+    <div style="width: 20%;">
+      <a href="{{ url_for('admin.view_lot_details', lot_id=lot.id, sort='spot_number', order=toggle_order if sort == 'spot_number' else 'asc') }}" class="text-decoration-underline text-white" style="margin-left: 10px;">
+        Spot Number {% if sort == 'spot_number' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+      </a>
+    </div>
+    <!-- 3. Total Parkings (20%) -->
+    <div class="text-center" style="width: 20%;">
+      <a href="{{ url_for('admin.view_lot_details', lot_id=lot.id, sort='total_parking', order=toggle_order if sort == 'total_parking' else 'asc') }}" class="text-decoration-underline text-white">
+        Total Parkings {% if sort == 'total_parking' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+      </a>
+    </div>
+    <!-- 4. Status (20%) -->
+    <div class="text-center" style="width: 20%;">
+      <a href="{{ url_for('admin.view_lot_details', lot_id=lot.id, sort='status', order=toggle_order if sort == 'status' else 'asc') }}" class="text-decoration-underline text-white">
+        Status {% if sort == 'status' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+      </a>
+    </div>
+    <!-- 5. Action (15%) -->
+    <div class="text-center" style="width: 15%; color:white;">
+      Action
+    </div>
+  </div>
+
+  <!-- Spots List -->
+  {% for spot in spots %}
+  <div class="list-group-item border-bottom p-3" style="background-color: {% if spot.status == 'A' %}#d4edda{% elif spot.status == 'O' %}#fff3cd{% else %}#f8d7da{% endif %};">
+    <!-- Mobile View: Card Layout -->
+    <div class="d-lg-none">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h5 class="mb-1"><strong>Spot #{{ spot.spot_number }}</strong></h5>
+          <p class="mb-2 text-muted"><small>ID: {{ spot.id }}</small></p>
+        </div>
+        <div class="text-end ps-2">
+          {% if spot.status == 'O' and spot.reservation_id %}
+            <a href="{{ url_for('admin.details_reservation', reservation_id=spot.reservation_id) }}" class="btn btn-sm text-white" style="background-color: #c1845d;">
+              View
+            </a>
+          {% else %}
+            <span class="text-muted">-</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="d-flex justify-content-between small mt-2">
+        <div><strong>Total Parkings:</strong> {{ spot.total_parking }}</div>
+        <div>
+          <span class="badge {% if spot.status == 'A' %}bg-success{% elif spot.status == 'O' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
+            {% if spot.status == 'A' %} Available
+            {% elif spot.status == 'O' %} Occupied
+            {% else %} Unknown {% endif %}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop View: Table Row Layout -->
+    <div class="d-none d-lg-flex align-items-center">
+      <!-- 1. ID -->
+      <div class="text-center" style="width: 15%;">
+        <strong>{{ spot.id }}</strong>
+      </div>
+      <!-- 2. Spot Number -->
+      <div style="width: 20%;">
+        <strong>Spot #{{ spot.spot_number }}</strong>
+      </div>
+      <!-- 3. Total Parkings -->
+      <div class="text-center" style="width: 20%;">
+        <strong>{{ spot.total_parking }}</strong>
+      </div>
+      <!-- 4. Status -->
+      <div class="text-center" style="width: 20%;">
+        <span class="badge {% if spot.status == 'A' %}bg-success{% elif spot.status == 'O' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
+          {% if spot.status == 'A' %} Available
+          {% elif spot.status == 'O' %} Occupied
+          {% else %} Unknown {% endif %}
+        </span>
+      </div>
+      <!-- 5. Action -->
+      <div class="text-center" style="width: 15%;">
+        {% if spot.status == 'O' and spot.reservation_id %}
+          <a href="{{ url_for('admin.details_reservation', reservation_id=spot.reservation_id) }}" class="btn btn-outline-dark btn-sm" style="background-color: #c1845d;">
+            View
+          </a>
+        {% else %}
+          <span class="text-muted">-</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="list-group-item text-center p-4" style="background-color: #f6e6ce;">
+    No spots found for this lot.
+  </div>
+  {% endfor %}
+
+  <!-- Back Button -->
+  <div class="text-center mt-3">
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-lg text-white" style="background-color: #c1845d;">
+      <i class="bi bi-arrow-left-circle"></i> Back to Dashboard
+    </a>
+  </div>
+</div>
+
+<footer><br></footer>
+{% endblock %}

@@ -1,0 +1,159 @@
+{% extends "admin_base.html" %}
+{% block title %}Admin Summary{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="fw-bold text-center mb-4" style="color: #9f391b;">System Overview</h2>
+
+  <!-- Meta Information Card -->
+  <div class="card mb-4 shadow-sm" style="border: 2px solid #a1887f; background-color: #fff7ec;">
+    <div class="card-body">
+      <h5 class="card-title" style="color: #9f391b;">System Statistics</h5>
+      <div class="row text-center mt-4">
+        <div class="col-md-2 col-4 mb-3">
+          <div class="fs-2 fw-bold" style="color: #c1845d;">{{ total_users }}</div>
+          <div class="text-muted small">Total Users</div>
+        </div>
+        <div class="col-md-2 col-4 mb-3">
+          <div class="fs-2 fw-bold" style="color: #66bb6a;">{{ active_users }}</div>
+          <div class="text-muted small">Active Users</div>
+        </div>
+        <div class="col-md-2 col-4 mb-3">
+          <div class="fs-2 fw-bold" style="color: #42a5f5;">{{ total_lots }}</div>
+          <div class="text-muted small">Total Lots</div>
+        </div>
+        <div class="col-md-2 col-4 mb-3">
+          <div class="fs-2 fw-bold" style="color: #66bb6a;">{{ active_lots }}</div>
+          <div class="text-muted small">Active Lots</div>
+        </div>
+        <div class="col-md-2 col-4 mb-3">
+          <div class="fs-2 fw-bold" style="color: #ffca28;">₹ {{ "%.2f"|format(total_system_revenue) }}</div>
+          <div class="text-muted small">Total Revenue</div>
+        </div>
+        <div class="col-md-2 col-4 mb-3">
+          <div class="fs-2 fw-bold" style="color: #ef5350;">{{ total_reservations }}</div>
+          <div class="text-muted small">Total Reservations</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="row">
+    <!-- Revenue Bar Chart -->
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm p-3" style="border: 2px solid #a1887f;">
+        <h5 class="text-center" style="color: #9f391b;">Lot Revenue Analysis</h5>
+        <canvas id="revenueChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Spots Pie Chart -->
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm p-3" style="border: 2px solid #a1887f;">
+        <h5 class="text-center" style="color: #9f391b;">Parking Spots Status</h5>
+        <canvas id="spotsChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chart JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // Data from Flask
+  const revenueData = {{ revenue_chart_data|tojson }};
+  const spotsData = {{ spots_data|tojson }};
+
+  // Revenue Bar Chart
+  const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+  const revenueChart = new Chart(revenueCtx, {
+    type: 'bar',
+    data: {
+      labels: revenueData.map(item => item.name),
+      datasets: [{
+        label: 'Revenue (₹)',
+        data: revenueData.map(item => item.revenue),
+        backgroundColor: '#c1845d',
+        borderColor: '#9f391b',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Top Performing Lots by Revenue'
+        },
+        legend: {
+          position: 'top',
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Parking Lots'
+          },
+          ticks: {
+            maxRotation: 45,
+            minRotation: 45
+          }
+        },
+        y: {
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Revenue (₹)'
+          },
+          ticks: {
+            callback: function(value) {
+              return '₹' + value.toFixed(2);
+            }
+          }
+        }
+      }
+    }
+  });
+
+  // Spots Pie Chart
+  const spotsCtx = document.getElementById('spotsChart').getContext('2d');
+  const spotsChart = new Chart(spotsCtx, {
+    type: 'pie',
+    data: {
+      labels: ['Occupied Spots', 'Free Spots'],
+      datasets: [{
+        label: 'Parking Spots',
+        data: [spotsData.occupied, spotsData.free],
+        backgroundColor: ['#ffca28', '#66bb6a'],
+        borderColor: ['#ffa000', '#4caf50'],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Current Parking Capacity Utilization'
+        },
+        legend: {
+          position: 'top',
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const total = context.dataset.data.reduce((a, b) => a + b, 0);
+              const percentage = ((context.parsed / total) * 100).toFixed(1);
+              return context.label + ': ' + context.parsed + ' (' + percentage + '%)';
+            }
+          }
+        }
+      }
+    }
+  });
+</script>
+
+{% endblock %}

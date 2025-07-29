@@ -1,0 +1,69 @@
+{% extends "user_base.html" %}
+{% block title %}Parking Receipt{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="border rounded shadow p-4 bg-white" style="border: 2px solid #6d4c41;">
+
+    <!-- User & Lot Details -->
+    <div class="row mb-4">
+      <!-- User Details -->
+      <div class="col-md-6 border-end">
+          <h5 class="text-danger fw-bold mb-3"><i class="bi bi-info-circle">User Details</i></h5>
+        <ul class="list-unstyled fs-5 mb-0">
+          <li><strong>Name:</strong> {{ current_user.name }}</li>
+          <li><strong>Email:</strong> {{ current_user.email }}</li>
+          <li><strong>Phone:</strong> {{ current_user.phone }}</li>
+        </ul>
+      </div>
+
+      <!-- Lot Details -->
+      <div class="col-md-6">
+          <h5 class="text-primary fw-bold mb-3"><i class="bi bi-parking">Lot Details</i></h5>
+        <ul class="list-unstyled fs-6 mb-0">
+          <li><strong>Lot Name:</strong> {{ lot.name }}</li>
+          <li><strong>Pincode:</strong> {{ lot.pincode }}</li>
+          <li><strong>Address:</strong> {{ lot.address }}</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Price, Vehicle Form -->
+    <div class="row">
+      <div class="col-md-12">
+          <h5 class="text-success fw-bold text-center mb-3"><i class="bi bi-currency-rupee"> Price & Confirmation</i></h5>
+        <div class="d-flex flex-column align-items-center">
+          <p class="fs-6"><strong>Rate per Hour:</strong> ₹{{ lot.cost_per_hour }}</p>
+
+          <form method="POST" action="{{ url_for('user.book_lot', lot_id=lot.id) }}" class="w-100" style="max-width: 400px;">
+{#            {{ csrf_token() }}#}
+            <div class="mb-3">
+              <label for="vehicle" class="form-label fw-bold">Vehicle Number</label>
+              <input type="text" id="vehicle" name="vehicle_number" class="form-control" required
+                     placeholder="e.g., MH12AB1234 {6 to 12 alnum characters}" pattern="^[a-zA-Z0-9]{6,12}$">
+            </div>
+
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="confirmCheck" required>
+              <label class="form-check-label" for="confirmCheck">
+                I confirm payment and agree to free the parking spot.
+              </label>
+            </div>
+
+            <div class="text-center"><span>
+                <button type="button" class="btn btn-lg anchor px-4" style="background-color:#9f6737 !important;"
+                        onclick="window.history.back();">Cancel</button>
+                &nbsp;&nbsp;
+                <button type="submit" class="btn btn-success btn-lg anchor">
+                    <i class="bi bi-printer"> Submit & Go Back</i>
+                </button>
+            </span></div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

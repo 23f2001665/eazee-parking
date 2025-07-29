@@ -1,0 +1,45 @@
+{% extends "user_base.html" %}
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h4>Search Results for "{{ q }}"</h4>
+
+    {% if reservations.items %}
+    <ul class="list-group mt-3">
+        {% for r in reservations.items %}
+        <li class="list-group-item">
+            <strong>Lot:</strong> {{ r.lot.name }},
+            <strong>Address:</strong> {{ r.lot.address }},
+            <strong>Pincode:</strong> {{ r.lot.pincode }},
+            <strong>Vehicle:</strong> {{ r.vehicle_number }}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Pagination -->
+    <nav class="mt-3">
+        <ul class="pagination">
+            {% if reservations.has_prev %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('user.search', q=q, page=reservations.prev_num) }}">Previous</a>
+            </li>
+            {% endif %}
+
+            <li class="page-item disabled">
+                <span class="page-link">Page {{ reservations.page }} of {{ reservations.pages }}</span>
+            </li>
+
+            {% if reservations.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('user.search', q=q, page=reservations.next_num) }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    {% else %}
+    <p class="text-muted mt-3">No results found.</p>
+    {% endif %}
+</div>
+{% endblock %}

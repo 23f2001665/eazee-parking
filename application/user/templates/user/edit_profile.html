@@ -1,0 +1,85 @@
+{% extends "user_base.html" %}
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+
+        <div class="row align-items-center">
+            <!-- Left Half: Avatar & Name -->
+            <div class="col-md-5 text-center border-end mb-4 mb-md-0">
+                <img src="{{ user.avatar_url or url_for('static', filename='uploads/default_user.jpeg') }}"
+                     alt="Avatar"
+                     class="img-thumbnail mb-3"
+                     style="max-width: 200px; height: auto;">
+
+                <!-- Username (non-editable) -->
+                <p class="text-muted mb-1">@{{ user.username }}</p>
+
+                <!-- Avatar Upload -->
+                <div class="mb-3">
+                    {{ form.avatar.label(class="form-label fw-semibold") }}
+                    {{ form.avatar(class="form-control") }}
+                    {% if form.avatar.errors %}
+                        <div class="text-danger">{{ form.avatar.errors[0] }}</div>
+                    {% endif %}
+                </div>
+
+                <!-- Editable Name -->
+                <div class="mb-3 text-start px-5">
+                    {{ form.name.label(class="form-label fw-semibold") }}
+                    {{ form.name(class="form-control") }}
+                    {% if form.name.errors %}
+                        <div class="text-danger">{{ form.name.errors[0] }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right Half: Profile Fields -->
+            <div class="col-md-7">
+                <div class="mb-3">
+                    {{ form.email.label(class="form-label fw-semibold") }}
+                    {{ form.email(class="form-control") }}
+                    {% if form.email.errors %}
+                        <div class="text-danger">{{ form.email.errors[0] }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.phone.label(class="form-label fw-semibold") }}
+                    {{ form.phone(class="form-control") }}
+                    {% if form.phone.errors %}
+                        <div class="text-danger">{{ form.phone.errors[0] }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.gender.label(class="form-label fw-semibold") }}
+                    {{ form.gender(class="form-select") }}
+                    {% if form.gender.errors %}
+                        <div class="text-danger">{{ form.gender.errors[0] }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.address.label(class="form-label fw-semibold") }}
+                    {{ form.address(class="form-control", rows=2) }}
+                    {% if form.address.errors %}
+                        <div class="text-danger">{{ form.address.errors[0] }}</div>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    {{ form.pincode.label(class="form-label fw-semibold") }}
+                    {{ form.pincode(class="form-control") }}
+                    {% if form.pincode.errors %}
+                        <div class="text-danger">{{ form.pincode.errors[0] }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button Centered Below -->
+        <div class="text-center mt-4">
+            {{ form.submit(class="btn btn-success px-5") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

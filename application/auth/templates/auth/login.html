@@ -1,0 +1,52 @@
+{% extends 'auth_base.html' %}
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<h2>Login</h2>
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+        {{ form.id_type.label(class="form-label") }}
+        {{ form.id_type(class="form-select") }}
+        {% for error in form.id_type.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.id_value.label(class="form-label") }}
+        {{ form.id_value(class="form-control") }}
+        {% for error in form.id_value.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.password.label(class="form-label") }}
+        {{ form.password(class="form-control") }}
+        {% for error in form.password.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    {{ form.submit(class="btn btn-primary") }}
+</form>
+
+<div class="container mt-3">
+  <div class="row">
+    <!-- Left column -->
+    <div class="col-6 text-start">
+      <div>Don't have an account?</div>
+      <div><a href="{{ url_for('auth.register') }}">Register here</a></div>
+    </div>
+
+    <!-- Right column -->
+    <div class="col-6 text-end">
+      <div>Forgot password?</div>
+      <div><a href="{{ url_for('auth.forgot') }}">Reset Password</a></div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

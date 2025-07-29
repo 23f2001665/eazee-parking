@@ -1,0 +1,74 @@
+{% extends "admin_base.html" %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if form %}
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+    {% endif %}
+
+        <div class="row align-items-center">
+            <!-- Left: Picture and Identity -->
+            <div class="col-md-5 text-center border-end mb-4 mb-md-0">
+                <img src="{{ user.avatar_url or url_for('static', filename='admin.png') }}"
+                     alt="Avatar"
+                     class="img-thumbnail mb-3"
+                     style="max-width: 300px; height: auto;">
+
+                {% if form %}
+                    <div class="mb-3">
+                        <label class="form-label">Upload Your Profile Picture</label>
+                        {{ form.avatar_file(class="form-control") }}
+                    </div>
+                {% endif %}
+
+
+                <p class="text-muted">@{{ user.username }}</p>
+                 <h4>{{ user.name }}</h4>
+            </div>
+
+            <!-- Right: Fields -->
+            <div class="col-md-7">
+                {% for label, field, value in [
+                    ('Email', form.email if form else None, user.email),
+                    ('Phone', form.phone if form else None, user.phone),
+                    ('Gender', form.gender if form else None, user.gender),
+                    ('Address', form.address if form else None, user.address),
+                    ('Pin Code', form.pin_code if form else None, user.pin_code),
+                ] %}
+                <div class="mb-3">
+                    <label class="form-label text-secondary fw-semibold">{{ label }}</label>
+                    {% if form %}
+                        {{ field(class="form-control") }}
+                    {% else %}
+                        <p class="form-control-plaintext">{{ value }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="alert alert-warning text-center mt-4" role="alert">
+    <i class="bi bi-lock-fill me-2">
+    For security reasons, admins cannot edit their profiles directly.<br>
+    Please contact the Database Management Team. Apologies for the inconvenience 🥲
+    </i></div>
+
+        <!-- Bottom Buttons -->
+{#        <div class="text-center mt-4">#}
+{#            {% if form %}#}
+{#                <button type="submit" class="btn btn-success px-5">Save Changes</button>#}
+{#            {% else %}#}
+{#                <a href="{{ url_for('admin.edit_profile') }}" class="btn btn-primary px-5">Edit Profile</a>#}
+{#            {% endif %}#}
+{#        </div>#}
+
+    {% if form %}
+    </form>
+    {% endif %}
+</div>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+{% endblock %}

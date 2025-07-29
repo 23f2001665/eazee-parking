@@ -1,0 +1,88 @@
+/* static/user_style.css */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f3dfc6;
+    color: #3e2723;
+}
+a, .anchor {
+    color: #ffffff !important;
+}
+
+a:hover,
+.anchor:hover,
+a:focus,
+.anchor:focus {
+    transform: scale(1.05);
+    transition: 0.3s ease-in-out;
+    color: #000000 !important;
+}
+
+/* This ensures scale(1) is applied smoothly when not hovered or focused */
+a:not(:hover):not(:focus),
+.anchor:not(:hover):not(:focus) {
+    transform: scale(1);
+    transition: transform 0.8s;
+}
+
+@media (hover: hover) {
+    a:hover, .anchor:hover {
+        transform: scale(1.05);
+    }
+}
+
+
+.nav-link{
+    text-decoration: dashed;
+    color: #ffffff !important;
+
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+    color: #000000 !important;
+}
+
+.navbar-custom {
+    background-color: #e3c395;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-brand {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.navbar-nav .nav-link {
+    color: #3e2723;
+    font-weight: 500;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #6d4c41;
+}
+
+.profile-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #67ff05;
+}
+
+.dropdown-menu {
+    background-color: #c68e69;
+    color: #ffffff;
+}
+
+.dropdown-item:hover {
+    background-color: #ffd6a5;
+    transition-duration: 0.2s;
+}
+
+.logout-btn {
+    margin-left: 10px;
+
+}
+

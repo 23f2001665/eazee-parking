@@ -1,0 +1,144 @@
+{% extends "user_base.html" %}
+{% block title %}User Summary{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class="fw-bold text-center mb-4">User Summary</h2>
+
+  <!-- Enhanced Basic Info -->
+  <div class="card mb-4 shadow">
+    <div class="card-body">
+      <h5 class="card-title">Welcome, {{ current_user.name }}!</h5>
+      <div class="row">
+        <div class="col-md-6">
+          <p class="card-text mb-1"><strong>Username:</strong> {{ current_user.username }}</p>
+          <p class="card-text mb-1"><strong>Email:</strong> {{ current_user.email }}</p>
+          <p class="card-text mb-1"><strong>Phone:</strong> {{ current_user.phone }}</p>
+          <p class="card-text mb-1"><strong>Address:</strong> {{ current_user.address }}, {{ current_user.pincode }}</p>
+        </div>
+        <div class="col-md-6">
+          <!-- Parking Statistics -->
+          <div class="d-flex justify-content-around text-center">
+            <div>
+              <div class="fs-3 fw-bold text-warning">{{ active_reservations }}</div>
+              <div class="text-muted">Active Bookings</div>
+            </div>
+            <div>
+              <div class="fs-3 fw-bold text-primary">{{ total_reservations }}</div>
+              <div class="text-muted">Total Bookings</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <div class="row">
+    <!-- Status Chart -->
+    <div class="col-md-6 mb-4">
+      <div class="card shadow p-3">
+        <h5 class="text-center">Reservation Status</h5>
+        <canvas id="statusChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Stacked Lot Usage Chart -->
+    <div class="col-md-6 mb-4">
+      <div class="card shadow p-3">
+        <h5 class="text-center">Active vs Completed by Lot</h5>
+        <canvas id="lotChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chart JS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // Data from Flask
+  const statusData = {{ status_data|tojson }};
+  const lotStats = {{ lot_stats|tojson }};
+
+  // Status Chart (Pie Chart)
+  const statusCtx = document.getElementById('statusChart').getContext('2d');
+  const statusChart = new Chart(statusCtx, {
+    type: 'pie',
+    data: {
+      labels: Object.keys(statusData).map(status => status === 'O' ? 'Active' : 'Completed'),
+      datasets: [{
+        label: 'Reservations',
+        data: Object.values(statusData),
+        backgroundColor: ['#ffca28', '#66bb6a', '#42a5f5', '#ef5350']
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        }
+      }
+    }
+  });
+
+  // Stacked Bar Chart for Lot Usage
+  const lotCtx = document.getElementById('lotChart').getContext('2d');
+  const lotChart = new Chart(lotCtx, {
+    type: 'bar',
+    data: {
+      // Extract lot names from lot_stats
+      labels: lotStats.map(stat => stat.name),
+      datasets: [
+        {
+          label: 'Active Reservations',
+          // Extract active_count from lot_stats
+          data: lotStats.map(stat => stat.active_count),
+          backgroundColor: '#ffca28', // Yellow for active
+          borderColor: '#ffa000',
+          borderWidth: 1
+        },
+        {
+          label: 'Completed Reservations',
+          // Extract completed_count from lot_stats
+          data: lotStats.map(stat => stat.completed_count),
+          backgroundColor: '#66bb6a', // Green for completed
+          borderColor: '#4caf50',
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: 'Reservations Breakdown by Parking Lot'
+        },
+        legend: {
+          position: 'top',
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          title: {
+            display: true,
+            text: 'Parking Lots'
+          }
+        },
+        y: {
+          stacked: true,
+          beginAtZero: true,
+          title: {
+            display: true,
+            text: 'Number of Reservations'
+          }
+        }
+      }
+    }
+  });
+</script>
+
+{% endblock %}

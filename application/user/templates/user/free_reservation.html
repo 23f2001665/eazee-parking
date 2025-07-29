@@ -1,0 +1,76 @@
+{% extends "user_base.html" %}
+{% block title %}Confirm Checkout{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="border rounded p-4 p-lg-5 mx-auto" style="border: 2px solid #a1887f !important; background-color: #fff7ec; max-width: 960px;">
+
+    <!-- Header -->
+    <div class="text-center mb-5">
+      <h2 class="fw-bold" style="color: #9f391b;">CHECKOUT SUMMARY</h2>
+      <p style="color: #569a7e; font-size: 1.3rem; font-weight: bold; font-family:'Code Pro',ui-monospace">Reservation #{{ '%04d'|format(reservation.id) }}</p>
+    </div>
+
+    <!-- Main Grid (Content is identical to details page for user confirmation) -->
+    <div class="row g-4 g-lg-5">
+      <!-- User Details -->
+      <div class="col-lg-6">
+        <h4 class="fw-bold mb-3" style="color: #bf360c;">🧍 User Details</h4>
+        <p class="mb-2 d-flex justify-content-between"><strong>Name:</strong> <span>{{ reservation.user.name }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Email:</strong> <span>{{ reservation.user.email }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Phone:</strong> <span>{{ reservation.user.phone }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Vehicle:</strong> <span>{{ reservation.vehicle_number }}</span></p>
+      </div>
+
+      <!-- Lot Details -->
+      <div class="col-lg-6">
+        <h4 class="fw-bold mb-3" style="color: #bf360c;">🅿️ Lot Details</h4>
+        <p class="mb-2 d-flex justify-content-between"><strong>Lot Name:</strong> <span>{{ reservation.lot.name[:35] }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Address:</strong> <span>{{ reservation.lot.address[:38] }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Address:</strong> <span>{{ reservation.lot.pincode }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Spot No:</strong> <span>#{{ reservation.spot_number }}</span></p>
+      </div>
+    </div>
+
+    <hr class="my-4" style="border-top: 1px solid #a1887f;">
+
+    <!-- Reservation + Price -->
+    <div class="row g-4 g-lg-5">
+      <!-- Reservation Info -->
+      <div class="col-lg-6">
+        <h4 class="fw-bold mb-3" style="color: #bf360c;">🕒 Reservation Info</h4>
+        <p class="mb-2 d-flex justify-content-between"><strong>Check-in:</strong> <span>{{ reservation.start_time .strftime('%d %b %Y, %I:%M %p') }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Check-out Time:</strong> <span>Still Booked</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Reservation ID:</strong> <span>{{ reservation.id }}</span></p>
+      </div>
+
+      <!-- Price & Status -->
+      <div class="col-lg-6">
+        <h4 class="fw-bold mb-3" style="color: #bf360c;">💸 Final Payment</h4>
+        <p class="mb-2 d-flex justify-content-between"><strong>Rate/hr:</strong> <span>₹{{ reservation.cost_per_hr }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Final Amount:</strong> <span class="fw-bolder fs-5">₹{{ reservation.total_cost }}</span></p>
+        <p class="mb-2 d-flex justify-content-between"><strong>Status:</strong><span class="badge bg-warning text-dark">Awaiting Payment</span></p>
+      </div>
+    </div>
+
+    <!-- Footer Form -->
+    <div class="text-center mt-5 no-print">
+      <hr style="border-top: 1px solid #a1887f;">
+      <h5 class="mb-3 mt-4" style="color: #9f391b;">Confirm Checkout</h5>
+      <p class="text-muted small">Clicking the button below will finalize the payment and free the parking spot.</p>
+
+      <form method="POST" action="{{ url_for('user.free_reservation', reservation_id=reservation.id) }}">
+        <div class="text-center"><span>
+                <button type="button" class="btn btn-lg anchor px-4" style="background-color:#9f6737 !important;"
+                        onclick="window.history.back();">Cancel</button>
+                &nbsp;&nbsp;
+                <button type="submit" class="btn btn-success btn-lg anchor">
+                    <i class="bi bi-printer"> Submit & Go Back</i>
+                </button>
+            </span></div>
+      </form>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

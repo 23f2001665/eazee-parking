@@ -1,0 +1,83 @@
+<!-- templates/user_base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}AdminBaseTitle{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('admin.static', filename='admin_style.css') }}">
+
+    <style>
+        {% block style %}{% endblock %}
+    </style>
+</head>
+<body>
+
+ <!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom">
+    <div class="container-fluid">
+        <!-- Brand -->
+        <a class="navbar-brand me-4 nav-link" href="{{ url_for('admin.dashboard') }}"><i>eazee Parking</i></a>
+
+{#        <!-- Search Form -->#}
+{#        <form class="d-flex flex-grow-1 me-4" role="search" action="#" method="GET">#}
+{#            <div class="input-group">#}
+{#                <input class="form-control rounded-start" type="search" placeholder="Search..." aria-label="Search" name="q">#}
+{#                <button class="btn btn-outline-dark rounded-end" type="submit">Search</button>#}
+{#            </div>#}
+{#        </form>#}
+
+        <!-- Right Side: Welcome -->
+        <div class="d-flex align-items-center">
+            <a class="nav-link" href="{{ url_for('admin.profile') }}" >
+                <span class="welcome-text me-3 nav-link">Welcome {{ current_user.name }}</span>
+            </a>
+
+        <!--Right Side: dropdown-->
+            <div class="dropdown">
+                <a class="d-flex align-items-center dropdown-toggle text-decoration-none nav-link" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="{{ current_user.avatar_url  or url_for('static', filename='admin.png') }}"
+                     alt="profile"
+                     class="profile-icon me-2"
+                     style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover;">
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li><a class="dropdown-item" href="{{ url_for('admin.profile') }}">Profile</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('admin.admin_summary') }}">Summary</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <form action="{{ url_for('auth.logout') }}" method="post" class="px-3">
+                            <button type="submit" class="btn btn-sm btn-outline-danger w-100">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container mt-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+</div>
+{% block content %} your content{% endblock %}
+</body>
+<!-- Bootstrap Bundle JS needed for drop-down -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</html>

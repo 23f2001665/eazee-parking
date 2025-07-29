@@ -1,0 +1,35 @@
+{% extends "admin_base.html" %}
+{% block title %}Add Parking Lot{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <h3 class="mb-4">Add New Parking Lot</h3>
+  <form method="POST">
+    {{ form.hidden_tag() }}
+    
+    <div class="mb-3">
+      {{ form.name.label(class="form-label") }}
+      {{ form.name(class="form-control") }}
+    </div>
+    <div class="mb-3">
+      {{ form.cost_per_hour.label(class="form-label") }}
+      {{ form.cost_per_hour(class="form-control") }}
+    </div>
+    <div class="mb-3">
+      {{ form.address.label(class="form-label") }}
+      {{ form.address(class="form-control") }}
+    </div>
+    <div class="mb-3">
+      {{ form.pincode.label(class="form-label") }}
+      {{ form.pincode(class="form-control") }}
+    </div>
+    <div class="mb-3">
+      {{ form.max_spots.label(class="form-label") }}
+      {{ form.max_spots(class="form-control") }}
+    </div>
+    <button type="button" class="btn btn-lg anchor px-4" style="background-color:#9f6737 !important;"
+                        onclick="window.history.back();">Cancel</button>
+    {{ form.submit(class="btn btn-primary btn-lg anchor px-3") }}
+  </form>
+</div>
+{% endblock %}

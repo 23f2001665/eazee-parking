@@ -1,0 +1,125 @@
+{% extends "admin_base.html" %}
+{% block title %}All Parking Lots{% endblock %}
+{% block content %}
+<div class="border rounded p-3 mt-4" style="border: 2px solid #a1887f !important; background-color: #fff7ec;">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="mb-0" style="color: #9f391b; font-weight: bolder">All Parking Lots</h3>
+    <a href="{{ url_for('admin.add_lot') }}" class="btn btn-lg text-white me-3" style="background-color: #c1845d;">Add New Lot</a>
+  </div>
+
+  {% set toggle_order = 'desc' if order == 'asc' else 'asc' %}
+
+<!-- Header Row -->
+
+<div class="list-group-item d-none d-lg-flex fw-bold border fs-5 py-2" style="border-bottom: 3px solid #a1887f !important; background-color: #9f6737;">
+  <!-- 1. Name + Address (40%) -->
+  <div style="width: 40%;">
+    <a href="{{ url_for('admin.all_lots', sort='name', order=toggle_order if sort == 'name' else 'asc') }}" class="text-decoration-underline text-white" style="margin-left: 10px;">
+      Lot Name & Address {% if sort == 'name' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+    </a>
+  </div>
+  <!-- 2. Pincode (15%) -->
+  <div class="text-center" style="width: 15%;">
+    <a href="{{ url_for('admin.all_lots', sort='pincode', order=toggle_order if sort == 'pincode' else 'asc') }}" class="text-decoration-underline text-white">
+      Pincode {% if sort == 'pincode' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+    </a>
+  </div>
+  <!-- 3. Available Spots & Price/hr (20%) -->
+  <div class="text-center" style="width: 20%;">
+    <div class="row">
+      <div class="col-6">
+        <a href="{{ url_for('admin.all_lots', sort='spots', order=toggle_order if sort == 'spots' else 'asc') }}" class="text-decoration-underline text-white">
+          Available {% if sort == 'spots' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+        </a>
+      </div>
+      <div class="col-6">
+        <a href="{{ url_for('admin.all_lots', sort='price', order=toggle_order if sort == 'price' else 'asc') }}" class="text-decoration-underline text-white">
+          Price/hr {% if sort == 'price' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+        </a>
+      </div>
+    </div>
+  </div>
+  <!-- 4. Total Revenue (15%) -->
+  <div class="text-center" style="width: 15%;">
+    <a href="{{ url_for('admin.all_lots', sort='revenue', order=toggle_order if sort == 'revenue' else 'asc') }}" class="text-decoration-underline text-white">
+      Total Revenue {% if sort == 'revenue' %}{% if order == 'asc' %} ↑ {% else %} ↓ {% endif %}{% endif %}
+    </a>
+  </div>
+  <!-- 5. Action (10%) -->
+  <div class="text-center" style="width: 10px; color:white;">
+    Action
+  </div>
+</div>
+
+<!-- Lots List -->
+{% for lot in lots %}
+<!-- Each lot is a list item with conditional background color -->
+<div class="list-group-item border-bottom p-3" style="background-color: {% if lot.is_active %}#f6e6ce{% else %}#d3d3d3{% endif %};">
+  <!-- Mobile View: Card Layout -->
+  <div class="d-lg-none">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h5 class="mb-1"><strong>{{ lot.name }}</strong>
+          {% if not lot.is_active %}
+            <span class="badge bg-secondary ms-2">Inactive</span>
+          {% endif %}
+        </h5>
+        <p class="mb-2 text-muted"><small>{{ lot.address }}</small></p>
+      </div>
+      <div class="text-end ps-2">
+        <a href="{{ url_for('admin.view_lot_details', lot_id=lot.id) }}" class="btn btn-sm text-white" style="background-color: #c1845d;">
+          View
+        </a>
+      </div>
+    </div>
+    <div class="d-flex justify-content-between small mt-2">
+      <div><strong>Pincode:</strong> {{ lot.pincode }}</div>
+      <div><strong>Available:</strong> {{ lot.available_spots }}</div>
+      <div><strong>Price/hr:</strong> ₹ {{ lot.cost_per_hour }}</div>
+      <div><strong>Revenue:</strong> ₹ {{ "%.2f"|format(lot.total_revenue) }}</div>
+    </div>
+  </div>
+
+  <!-- Desktop View: Table Row Layout -->
+  <div class="d-none d-lg-flex align-items-center">
+    <!-- 1. Name + Address -->
+    <div style="width: 40%;">
+      <strong>{{ lot.name }}</strong>
+      {% if not lot.is_active %}
+        <span class="badge bg-secondary ms-2">Inactive</span>
+      {% endif %}
+      <br>
+      <small class="text-muted">&nbsp;&nbsp;&nbsp;&nbsp;{{ lot.address }}</small>
+    </div>
+    <!-- 2. Pincode -->
+    <div class="text-center" style="width: 15%;">
+      <strong>{{ lot.pincode }}</strong>
+    </div>
+    <!-- 3. Available & Price -->
+    <div class="text-center" style="width: 20%;">
+      <div class="row">
+        <div class="col-6"><strong>{{ lot.available_spots }}</strong></div>
+        <div class="col-6">₹ <strong>{{ lot.cost_per_hour }}</strong></div>
+      </div>
+    </div>
+    <!-- 4. Total Revenue -->
+    <div class="text-center" style="width: 15%;">
+      <strong>₹ {{ "%.2f"|format(lot.total_revenue) }}</strong>
+    </div>
+    <!-- 5. Action -->
+    <div class="text-center" style="width: 10%;">
+      <a href="{{ url_for('admin.view_lot_details', lot_id=lot.id) }}" class="btn btn-outline-dark btn-sm" style="background-color: #c1845d;">
+        View
+      </a>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+</div>
+<footer><br></footer>
+{% endblock %}
+
+
+

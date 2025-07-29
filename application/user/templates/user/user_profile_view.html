@@ -1,0 +1,83 @@
+{% extends "user_base.html" %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center align-items-start">
+
+    <!-- Left Column: Avatar -->
+    <div class="col-md-3 text-center border-end mb-4">
+      <img src="{{ user.avatar_url or url_for('static', filename='uploads/default_user.jpeg') }}"
+           alt="Avatar"
+           class="rounded-circle img-thumbnail"
+           style="width: 200px; height: 200px; object-fit: cover;">
+      <p class="text-muted mt-2">@{{ user.username }}</p>
+      <h4>{{ user.name }}</h4>
+
+      {% if form %}
+      <div class="mb-3">
+        <label class="form-label">Upload Your Profile Picture</label>
+        {{ form.avatar_file(class="form-control") }}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Middle Column: Details -->
+    <div class="col-md-4">
+      {% for label, field, value in [
+          ('Email', form.email if form else None, user.email),
+          ('Phone', form.phone if form else None, user.phone),
+          ('Gender', form.gender if form else None, user.gender),
+          ('Address', form.address if form else None, user.address),
+          ('Pin Code', form.pincode if form else None, user.pincode),
+      ] %}
+      <div class="mb-3">
+        <label class="form-label text-secondary fw-semibold">{{ label }}</label>
+        {% if form %}
+          {{ field(class="form-control") }}
+        {% else %}
+          <p class="form-control-plaintext">{{ value }}</p>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Right Column: Delete Box -->
+    <div class="col-md-4">
+      <div class="border rounded p-4 bg-light">
+        <h5 class="text-danger">Delete Account</h5>
+        <p class="small text-muted">
+          Deleting your account is permanent and cannot be undone.<br>
+          Please confirm you understand the risks.
+        </p>
+        <form action="{{ url_for('user.delete_account') }}" method="POST">
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="confirm_delete" id="confirmDelete">
+            <label class="form-check-label" for="confirmDelete">
+              I understand and want to delete my account
+            </label>
+          </div>
+          <button type="submit" class="btn btn-danger w-100">Submit</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Action -->
+  <div class="text-center mt-4">
+    {% if form %}
+      <button type="submit" class="btn btn-success px-5">Save Changes</button>
+    {% else %}
+      <a href="{{ url_for('user.edit_profile') }}" class="btn btn-primary px-5">Edit Profile</a>
+    {% endif %}
+  </div>
+
+  {% if form %}
+  </form>
+  {% endif %}
+</div>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+{% endblock %}
