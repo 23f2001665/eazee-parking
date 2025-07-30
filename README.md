@@ -1,5 +1,5 @@
 # eazee-parking (vehicle-parking-app V1)
-<hr>
+---
 ## Student Information:
 - Name: Himanshu Rastogi<br>
 - Roll Number: 22f2001665<br>
@@ -192,4 +192,17 @@ application/
 
 ---
 
-
+# How to use:
+- download the project zip and after unziping it go the directory.
+- create a python virtual enviroment there, activate it and install the packages from requirements.txt.
+- run these command:
+  ```
+  flask seed
+  flask run
+  ```
+  or
+  ```
+  flask seed
+  python app.py
+  ```
+  
