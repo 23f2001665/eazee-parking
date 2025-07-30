@@ -1,8 +1,8 @@
 # eazee-parking (vehicle-parking-app V1)
 <hr>
 ##Student Information:
-- Name: Himanshu Rastogi
-- Roll Number: 22f2001665
+- Name: Himanshu Rastogi<br>
+- Roll Number: 22f2001665<br>
 - Email Id: 22f2001665@ds.study.iitm.ac.in
 
 ### About Me
@@ -12,11 +12,42 @@
 ## Project Description:
 This project targets to create a nice web app, which can be used to book parking spots by users and also gives admin an easy access to maintain the lots and users.
 
-
 ## Overview
 
 This project is a Flask-based web application for managing parking lots, users, reservations, and admin operations. It uses SQLAlchemy for ORM, Flask-Login for authentication, and organizes code using Blueprints for modularity.
+I have also used dotevn module to load environment variables and faker packer to create sample data for testing.
+---
 
+## Python Packages Used
+- **flask**
+- **flask-login**
+- **flask-sqlalchemy**
+- **flask-wtf**
+- **faker**
+- **dotenv**
+
+
+## Core Functionalities
+### Admin login and User login
+
+- User can user username or email or phone and password for the user and admin login.
+- I have used flask-login package for login.
+
+### Admin Functionalities:
+
+- The admin creates/edits/deletes a parking lot. Note: Delete only if all spots in the parking lot are empty.
+- The admin can’t add each parking spot individually. The number of parking spots will be created based on the maximum number of       parking spots in a lot.
+- The admin can view the status of parking spot and check the parked vehicle details If the parking spot status is occupied.
+- The admin can view all registered users.
+- The admin can view the summary charts of parking lots/spots.
+
+### User Functionality.
+
+- The user can choose an available parking lot and allocation is done as per the first available parking spot. Note: The user can’t     select a parking spot.
+- The user changes the status of the parking spot to occupied, once the vehicle is parked.
+- The user changes the parking spot status to released, once the vehicle is moved out of the parking.
+- The timestamp is recorded between parking in and parking out.
+- Shows the summary charts on his/her parking.
 ---
 
 ## Project Structure
@@ -160,3 +191,5 @@ application/
 - `Reservation`: Reservation records linking users, lots, and spots.
 
 ---
+
+
