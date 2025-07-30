@@ -6,8 +6,8 @@ Readme.md
 __pycache__/
 
 # Flask/Instance-specific
-instance/
-*.db
+# instance/
+# *.db
 
 # Virtual Environments
 .venv/
