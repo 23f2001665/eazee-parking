@@ -1,6 +1,6 @@
 # eazee-parking (vehicle-parking-app V1)
 <hr>
-##Student Information:
+## Student Information:
 - Name: Himanshu Rastogi<br>
 - Roll Number: 22f2001665<br>
 - Email Id: 22f2001665@ds.study.iitm.ac.in
