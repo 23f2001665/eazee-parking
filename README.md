@@ -1,5 +1,16 @@
-# parking-app
-This project targets to create a nice web app, which can be used to book parking spots by users.
+# eazee-parking (vehicle-parking-app V1)
+<hr>
+##Student Information:
+- Name: Himanshu Rastogi
+- Roll Number: 22f2001665
+- Email Id: 22f2001665@ds.study.iitm.ac.in
+
+### About Me
+- I’m a second-year Data Science and Programming student at IIT Madras. I am very interested in learning programming and choosing between tradeoff is one my favourite task. This project make me learn a lot and I have tried my best to make as good as I can.
+<hr>
+
+## Project Description:
+This project targets to create a nice web app, which can be used to book parking spots by users and also gives admin an easy access to maintain the lots and users.
 
 
 ## Overview
@@ -36,6 +47,11 @@ application/
         routes.py
         user_forms.py
 ```
+
+## 📊 Entity Relationship Diagram (ERD)
+
+![ERD](/erd.png)
+
 
 ---
 
