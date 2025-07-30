@@ -1,13 +1,5 @@
 # eazee-parking (vehicle-parking-app V1)
 ---
-## Student Information:
-- Name: Himanshu Rastogi<br>
-- Roll Number: 22f2001665<br>
-- Email Id: 22f2001665@ds.study.iitm.ac.in
-
-### About Me
-- I’m a second-year Data Science and Programming student at IIT Madras. I am very interested in learning programming and choosing between tradeoff is one my favourite task. This project make me learn a lot and I have tried my best to make as good as I can.
-<hr>
 
 ## Project Description:
 This project targets to create a nice web app, which can be used to book parking spots by users and also gives admin an easy access to maintain the lots and users.
@@ -25,29 +17,6 @@ I have also used dotevn module to load environment variables and faker packer to
 - **flask-wtf**
 - **faker**
 - **dotenv**
-
-
-## Core Functionalities
-### Admin login and User login
-
-- User can user username or email or phone and password for the user and admin login.
-- I have used flask-login package for login.
-
-### Admin Functionalities:
-
-- The admin creates/edits/deletes a parking lot. Note: Delete only if all spots in the parking lot are empty.
-- The admin can’t add each parking spot individually. The number of parking spots will be created based on the maximum number of       parking spots in a lot.
-- The admin can view the status of parking spot and check the parked vehicle details If the parking spot status is occupied.
-- The admin can view all registered users.
-- The admin can view the summary charts of parking lots/spots.
-
-### User Functionality.
-
-- The user can choose an available parking lot and allocation is done as per the first available parking spot. Note: The user can’t     select a parking spot.
-- The user changes the status of the parking spot to occupied, once the vehicle is parked.
-- The user changes the parking spot status to released, once the vehicle is moved out of the parking.
-- The timestamp is recorded between parking in and parking out.
-- Shows the summary charts on his/her parking.
 ---
 
 ## Project Structure
@@ -66,22 +35,24 @@ application/
         __init__.py
         forms.py
         routes.py
-    database/
-        __init__.py
-        init_db.py
-        models.py
-    main/
+     main/
         __init__.py
         routes.py
     user/
         __init__.py
         routes.py
         user_forms.py
+    database/
+        __init__.py
+        init_db.py
+        models.py
+   instance/
+        database.sqlite3
 ```
 
 ## 📊 Entity Relationship Diagram (ERD)
 
-![ERD](/erd.png)
+![ERD](/ERD.png)
 
 
 ---
@@ -194,4 +165,4 @@ application/
   python app.py
   ```
 
-## Demo video linke: 
+## Demo video linke: https://drive.google.com/file/d/1fi_HzI6EceraB4qYwbhsvKYaJpSEetmk/view?usp=drive_link
