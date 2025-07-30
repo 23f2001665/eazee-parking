@@ -13,8 +13,8 @@
 This project targets to create a nice web app, which can be used to book parking spots by users and also gives admin an easy access to maintain the lots and users.
 
 ## Overview
-
-This project is a Flask-based web application for managing parking lots, users, reservations, and admin operations. It uses SQLAlchemy for ORM, Flask-Login for authentication, and organizes code using Blueprints for modularity.
+---
+This project is a Flask-based web application for managing parking lots, users, reservations, and admin operations. It uses SQLAlchemy for ORM, Flask-Login and Flask-WTF for authentication, and organizes code using Blueprints for modularity.
 I have also used dotevn module to load environment variables and faker packer to create sample data for testing.
 ---
 
@@ -171,18 +171,6 @@ application/
 
 ---
 
-## Getting Started
-
-1. Install dependencies:  
-   `pip install -r requirements.txt`
-2. Set up environment variables in `.env`. If you don't have any then app will use the default given here.
-3. Initialize the database:  
-   `flask seed`
-4. Run the app:  
-   `python app.py`
-
----
-
 ## Key Modules & Classes
 
 - `User`: User model with authentication fields.
@@ -192,7 +180,7 @@ application/
 
 ---
 
-# How to use:
+# Getting Started
 - download the project zip and after unziping it go the directory.
 - create a python virtual enviroment there, activate it and install the packages from requirements.txt.
 - run these command:
@@ -205,4 +193,5 @@ application/
   flask seed
   python app.py
   ```
-  
+
+## Demo video linke: 
